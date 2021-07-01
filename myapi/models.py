@@ -101,6 +101,7 @@ class User(AbstractBaseUser):
         return self.is_superuser
 
     class Meta:
+        ordering = ['email']
         db_table = "login"
     
     #def save(self, *args, **kwargs):

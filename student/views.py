@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,9 +8,10 @@ from .serializers import SerializeStudent
 from rest_framework import status 
 class StudentList(APIView):
     permission_classes = [AllowAny]
+
     def get(self,request,format=None):
         students = Student.objects.all()
-        student_serializer = SerializeStudent(Student,many=True)
+        student_serializer = SerializeStudent(students,many=True)
         return Response(student_serializer.data)
 
     def post(self,request,format=None):

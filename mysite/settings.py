@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'myapi.apps.MyapiConfig',
     'rest_framework',
     'profiles',
+    'student',
+    'lecture',
+    'course',
+    'assignment',
 ]
 
 MIDDLEWARE = [
