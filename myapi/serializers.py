@@ -4,28 +4,10 @@ from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
-from .models import Assignment, Student, Lecture, Course, User
+from .models import  User
 from profiles.models import UserProfile
         
-class AssignmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Assignment
-        fields = '__all__'
 
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Student
-        fields = '__all__'
-
-class LectureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lecture
-        fields = '__all__'
-
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

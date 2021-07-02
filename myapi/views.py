@@ -4,8 +4,7 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
-from .serializers import StudentSerializer, CourseSerializer, LectureSerializer, AssignmentSerializer, UserRegistrationSerializer, UserLoginSerializer
-from .models import Assignment, Student, Lecture, Course
+from .serializers import UserRegistrationSerializer, UserLoginSerializer
 
 
 class UserRegistrationView(CreateAPIView):

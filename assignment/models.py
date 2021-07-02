@@ -1,14 +1,12 @@
 from time import time 
 import uuid
 from django.db import models
-from student.models import Student
 from course.models import Course 
 from django.utils.translation import ugettext_lazy as _
 def get_id():
     return int(time())
     
 class Assignment(models.Model):
-    student = models.ForeignKey(Student,on_delete=models.CASCADE)
     course = models.ForeignKey(Course,on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(null=True,blank=True)
