@@ -7,7 +7,7 @@ def get_id():
     return int(time())
     
 class Assignment(models.Model):
-    course = models.ForeignKey(Course,on_delete=models.CASCADE)
+    course = models.ForeignKey('course.Course',on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(null=True,blank=True)
     student_points = models.IntegerField(null=True,blank=True)
