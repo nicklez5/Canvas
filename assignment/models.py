@@ -14,11 +14,11 @@ class Assignment(models.Model):
     max_points = models.IntegerField(null=True,blank=True)
     date_due = models.DateTimeField(_('date due'), auto_now_add = False)
     description = models.TextField(blank=True)
-    assignment_id = models.IntegerField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
 
     def save(self, *args, **kwargs):
-        if not self.assignment_id:
-            self.assignment_id = get_id()
+        if not self.id:
+            self.id = get_id()
         super().save(*args,**kwargs)
 
     def __str__(self):

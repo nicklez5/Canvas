@@ -10,7 +10,7 @@ class Lecture(models.Model):
     date_created = models.DateTimeField(_('date created'),auto_now_add=True)
     name = models.CharField(max_length=100)
     imageFile = models.ImageField(upload_to='lectures')
-    id = models.IntegerField(primary_key=True,editable=False)
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     course = models.ForeignKey('course.Course', on_delete=models.CASCADE,blank=True)
 
     def __str__(self):

@@ -3,7 +3,7 @@ import { ExecOptionsWithStringEncoding } from "child_process";
 export class Course{
     constructor(){}
     public name: string;
-    public id: string;
+    public id: number;
     public lectures: any[];
     public students: any[];
     public assignments: any[];
@@ -14,7 +14,7 @@ export class Lecture{
     public date_created: string;
     public name: string;
     public imageFile: string;
-    public id: string;
+    public id: number;
     public course: any;
 }
 
@@ -27,12 +27,12 @@ export class Assignment{
     public max_points: number;
     public date_due: string;
     public description: string;
-    public assignment_id: number;
+    public id: number;
 }
 
 export class UserProfile{
     constructor(){}
-    public id: string;
+    public id: number;
     public user: any;
     public first_name: string;
     public last_name: string;
@@ -43,7 +43,7 @@ export class UserProfile{
 
 export class Student{
     constructor(){}
-    public id: string;
+    public id: number;
     public profile: any;
     public assignments: any[];
 }

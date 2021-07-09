@@ -36,5 +36,5 @@ class UserProfileView(RetrieveAPIView):
                 'error': str(e)
                 }
         return Response(response, status=status_code)
-        
+
 # Create your views here.

@@ -43,10 +43,10 @@ class User(AbstractBaseUser):
         ordering = ['email']
         db_table = "login"
     
-    #def save(self, *args, **kwargs):
-        #if not self.user_id:
-            #self.user_id = get_id()
-        #super(User, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.id = get_id()
+        super(User, self).save(*args, **kwargs)
         
 
 
