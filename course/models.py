@@ -1,10 +1,11 @@
 from time import time
 import uuid
 from django.db import models
-
+from myapi.models import User
 def get_id():
     return int(time())
 class Course(models.Model):
+    
     name = models.CharField(max_length=40)
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     lectures = models.ManyToManyField('lecture.Lecture',blank=True)

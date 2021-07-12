@@ -37,13 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapi.apps.MyapiConfig',
+    'myapi',
     'rest_framework',
-    'profiles',
-    'student',
-    'assignment',
-    'lecture',
-    'course',
+    #'profiles',
+    #'student',
+    #'assignment',
+    #'lecture',
+    #'course',
     
 ]
 
