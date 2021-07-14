@@ -1,9 +1,9 @@
-
+from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
-class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, **extra_fields):
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email, password=None):
         if username is None:
             raise TypeError('Users must have a username.')
         if email is None:
@@ -14,15 +14,11 @@ class UserManager(BaseUserManager):
             email = self.normalize_email(email),
         )
         user.set_password(password)
-        
-        user.save()
-
+        user.save(using=self._db)
         return user
     
-    def create_superuser(self,username, email, password, **extra_fields):
-        extra_fields.setdefault('is_staff',True)
-        extra_fields.setdefault('is_superuser',True)
-        extra_fields.setdefault('is_active', True)
+    def create_superuser(self,username, email, password=None):
+        
 
         if password is None:
             raise TypeError('Staff must have a password.')
@@ -33,10 +29,10 @@ class UserManager(BaseUserManager):
             username,
             email,
             password,
-            **extra_fields
         )
-        
-        user.save()
+        user.is_staff = True
+        user.is_superuser =  True
+        user.save(using=self._db)
         return user
         
         
