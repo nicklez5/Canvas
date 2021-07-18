@@ -1,34 +1,18 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import update_last_login
+#from django.contrib.auth import authenticate
+#from django.contrib.auth.models import update_last_login
 
 from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework_jwt.settings import api_settings
+#from rest_framework.views import APIView
+#from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import authenticate 
 from .models import  User
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length=128,
-        min_length=8,
-        write_only=True
-    )
-
-    token = serializers.CharField(max_length=255, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['email', 'username', 'password', 'token']
-
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-
+from profiles.serializers import ProfileSerializer
+        
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
     username = serializers.CharField(max_length=255, read_only=True)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
-
     def validate(self, data):
         # The `validate` method is where we make sure that the current
         # instance of `LoginSerializer` has "valid". In the case of logging a
@@ -82,6 +66,25 @@ class LoginSerializer(serializers.Serializer):
             'username': user.username,
             'token': user.token
         }
+    
+class RegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        max_length=128,
+        min_length=8,
+        write_only=True
+    )
+
+    token = serializers.CharField(max_length=255, read_only=True)
+
+    class Meta:
+        model = User
+        # List all of the fields that could possibly be included in a request
+        # or response, including fields specified explicitly above.
+        fields = ['email', 'username', 'password', 'token']
+
+    def create(self, validated_data):
+        # Use the `create_user` method we wrote earlier to create a new user.
+        return User.objects.create_user(**validated_data)
 
 class UserSerializer(serializers.ModelSerializer):
     """Handles serialization and deserialization of User objects."""
@@ -95,10 +98,16 @@ class UserSerializer(serializers.ModelSerializer):
         min_length=8,
         write_only=True
     )
-
+    profile = ProfileSerializer(write_only=True)
+    bio = serializers.CharField(source='profile.bio', read_only=True)
+    image = serializers.CharField(source='profile.image', read_only=True)
+    
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'token',)
+        fields = (
+            'email', 'username', 'password', 'token', 'profile', 'bio',
+            'image',
+        )
 
         # The `read_only_fields` option is an alternative for explicitly
         # specifying the field with `read_only=True` like we did for password
@@ -139,68 +148,68 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
-from profiles.models import UserProfile
-        
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ('first_name', 'last_name', 'phone_number' , 'age' , 'gender')
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    profile = UserSerializer(required=False)
 
-    class Meta:
-        model = User
-        fields = ('username','email','password','profile')
-        extra_kwargs = {'password' : {'write_only': True }}
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserProfile
+#         fields = ('first_name', 'last_name', 'phone_number' , 'age' , 'gender')
 
-    def create(self,validated_data):
-        profile_data = validated_data.pop('profile')
-        user = User.objects.create_user(**validated_data)
-        UserProfile.objects.create(
-            user = user,
-            first_name = profile_data['first_name'],
-            last_name = profile_data['last_name'],
-            phone_number = profile_data['phone_number'],
-            age = profile_data['age'],
-            gender = profile_data['gender']
-        )
-        return user 
+# class UserRegistrationSerializer(serializers.ModelSerializer):
+#     profile = UserSerializer(required=False)
 
-JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
-JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
+#     class Meta:
+#         model = User
+#         fields = ('username','email','password','profile')
+#         extra_kwargs = {'password' : {'write_only': True }}
 
-class UserLoginSerializer(serializers.Serializer):
+#     def create(self,validated_data):
+#         profile_data = validated_data.pop('profile')
+#         user = User.objects.create_user(**validated_data)
+#         UserProfile.objects.create(
+#             user = user,
+#             first_name = profile_data['first_name'],
+#             last_name = profile_data['last_name'],
+#             phone_number = profile_data['phone_number'],
+#             age = profile_data['age'],
+#             gender = profile_data['gender']
+#         )
+#         return user 
 
-    email = serializers.CharField(max_length=255)
-    password = serializers.CharField(max_length=128, write_only=True)
-    token = serializers.CharField(max_length=255,read_only=True)
+# JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
+# JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 
-    def validate(self,data):
-        email = data.get("email",None)
-        password = data.get("password", None)
-        user = authenticate(email=email, password=password)
-        if user is None:
-            raise serializers.ValidationError(
-                'A user with this email and password is not found.'
-            )
-        try:
-            payload = JWT_PAYLOAD_HANDLER(user)
-            jwt_token = JWT_ENCODE_HANDLER(payload)
-            update_last_login(None,user)
-        except User.DoesNotExist:
-            raise serializers.ValidationError(
-                'User with given email and password does not exists'
-            )
-        return {
-            'email' : user.email,
-            'token' : jwt_token
-        }
+# class UserLoginSerializer(serializers.Serializer):
 
-class UserListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
+#     email = serializers.CharField(max_length=255)
+#     password = serializers.CharField(max_length=128, write_only=True)
+#     token = serializers.CharField(max_length=255,read_only=True)
+
+#     def validate(self,data):
+#         email = data.get("email",None)
+#         password = data.get("password", None)
+#         user = authenticate(email=email, password=password)
+#         if user is None:
+#             raise serializers.ValidationError(
+#                 'A user with this email and password is not found.'
+#             )
+#         try:
+#             payload = JWT_PAYLOAD_HANDLER(user)
+#             jwt_token = JWT_ENCODE_HANDLER(payload)
+#             update_last_login(None,user)
+#         except User.DoesNotExist:
+#             raise serializers.ValidationError(
+#                 'User with given email and password does not exists'
+#             )
+#         return {
+#             'email' : user.email,
+#             'token' : jwt_token
+#         }
+
+# class UserListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = '__all__'
     

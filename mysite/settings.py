@@ -40,19 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapi',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
+    'rest_framework',
+    'myapi',
+    'core',
     'profiles',
-    'student',
-    'assignment',
-    'lecture',
-    'course',
+    #'student',
+    #'assignment',
+    #'lecture',
+    #'course',
     
 ]
 
@@ -136,10 +132,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+SITE_ID = 1
+REST_FRAMEWORK = {
+
+    'EXCEPTION_HANDLER': 'mysite.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'myapi.backends.JWTAuthentication',
+        #'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
 AUTH_USER_MODEL = 'myapi.User'
-
-
-
 
 
 # JWT_AUTH = {

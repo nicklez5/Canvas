@@ -1,40 +1,30 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from myapi.serializers import UserRegistrationSerializer
-from .models import UserProfile
 
-class UserProfileView(RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    authentication_class = JSONWebTokenAuthentication
-    def get(self, request):
+from .models import Profile
+from .renderers import ProfileJSONRenderer
+from .serializers import ProfileSerializer
+from .exceptions import ProfileDoesNotExist
+
+class ProfileRetrieveAPIView(RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    renderer_classes = (ProfileJSONRenderer,)
+    serializer_class = ProfileSerializer
+
+    def retrieve(self, request, username, *args, **kwargs):
+        # Try to retrieve the requested profile and throw an exception if the
+        # profile could not be found.
         try:
-            user_profile = UserProfile.objects.get(user=request.user)
-            status_code = status.HTTP_200_OK
-            response = {
-                'success': 'true',
-                'status code': status_code,
-                'message': 'User profile fetched successfully',
-                'data': [{
-                    'first_name': user_profile.first_name,
-                    'last_name': user_profile.last_name,
-                    'phone_number': user_profile.phone_number,
-                    'age': user_profile.age,
-                    'gender': user_profile.gender,
-                    }]
-                }
+            # We use the `select_related` method to avoid making unnecessary
+            # database calls.
+            profile = Profile.objects.select_related('user').get(
+                user__username=username
+            )
+        except Profile.DoesNotExist:
+            raise
+            raise ProfileDoesNotExist
+        serializer = self.serializer_class(profile)
 
-        except Exception as e:
-            status_code = status.HTTP_400_BAD_REQUEST
-            response = {
-                'success': 'false',
-                'status code': status.HTTP_400_BAD_REQUEST,
-                'message': 'User does not exists',
-                'error': str(e)
-                }
-        return Response(response, status=status_code)
-
-# Create your views here.
+        return Response(serializer.data, status=status.HTTP_200_OK)

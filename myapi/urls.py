@@ -1,14 +1,14 @@
-from django.urls import include, path
-from .views import LoginAPIView, RegistrationAPIView, UserRetrieveUpdateAPIView
-from django.conf.urls import url 
+from django.conf.urls import url
+from .views import RegistrationAPIView, LoginAPIView, UserRetrieveUpdateAPIView
 
 app_name = 'myapi'
 urlpatterns = [
     url(r'^user/?$', UserRetrieveUpdateAPIView.as_view()),
-    url(r'^users/?$',RegistrationAPIView.as_view()),
+    url(r'^users/?$', RegistrationAPIView.as_view()),
     url(r'^users/login/?$', LoginAPIView.as_view()),
-    #path('signup', views.UserRegistrationView.as_view()),
-    #path('signin', views.UserLoginView.as_view()),
-    #path('register', views.register_request,name="register"),
-    #path('api-auth/',include('rest_framework.urls',namespace='rest_framework'))
+    # url(r'^rest-auth/', include('rest_auth.urls')),
+    # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
+    # url(r'^account/', include('allauth.urls')),
+    # url(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
+
 ]
