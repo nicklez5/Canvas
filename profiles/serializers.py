@@ -16,3 +16,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             return obj.image
 
         return 'https://static.productionready.io/images/smiley-cyrus.jpg'
+    
+    def update(self, instance, validated_data):
+        bio = validated_data.pop('bio', None)
+        for (key,value) in validated_data.items():
+            setattr(instance,key,value)
+        if bio is not None:
+            instance.set_password(bio)
+        
+        instance.save()
+        return instance 
+
+        
+        

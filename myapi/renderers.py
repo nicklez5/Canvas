@@ -2,7 +2,7 @@
 from core.renderers import ConduitJSONRenderer
 
 class UserJSONRenderer(ConduitJSONRenderer):
-    charset = 'utf-8'
+    
     object_label = 'user'
 
     def render(self, data, media_type=None, renderer_context=None):
