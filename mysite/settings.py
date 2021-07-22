@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'myapi',
     'core',
     'profiles',
+    'articles',
     #'student',
     #'assignment',
     #'lecture',

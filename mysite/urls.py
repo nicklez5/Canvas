@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('myapi.urls', namespace='myapi')),
     path('api/', include('profiles.urls',namespace='profiles')),
+    path('api/', include('articles.urls', namespace='articles')),
     #path('api/', include(('student.urls','student'),namespace="students")),
     #path('api/', include(('assignment.urls','assignment'),namespace="assignments")),
     #path('api/', include(('lecture.urls', 'lecture'), namespace="lectures")),

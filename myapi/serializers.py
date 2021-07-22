@@ -5,6 +5,7 @@ from rest_framework import serializers
 #from rest_framework.views import APIView
 #from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import authenticate 
+
 from .models import User
 from profiles.serializers import ProfileSerializer
         
