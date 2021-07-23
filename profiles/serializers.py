@@ -5,10 +5,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
     bio = serializers.CharField(allow_blank=True, required=False)
     image = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'image',)
+        fields = ('username', 'bio', 'image','following',)
         read_only_fields = ('username',)
 
     def get_image(self, obj):
@@ -25,7 +26,20 @@ class ProfileSerializer(serializers.ModelSerializer):
             instance.set_password(bio)
         
         instance.save()
-        return instance 
+        return instance
+    
+    def get_following(self, instance):
+        request = self.context.get('request', None)
+        if request is None:
+            return False
+        
+        if not request.user.is_authenticated:
+            return False
+        
+        follower = request.user.profile
+        followee = instance
+
+        return follower.is_following(followee)
 
         
         

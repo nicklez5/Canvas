@@ -136,13 +136,17 @@ STATIC_URL = '/static/'
 SITE_ID = 1
 REST_FRAMEWORK = {
 
-    'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
-    'NON_FIELD_ERRORS_KEY': 'error',
+   
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'myapi.backends.JWTAuthentication',
         #'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'PAGE_SIZE': 20,
+
 }
 
 AUTH_USER_MODEL = 'myapi.User'
